@@ -6,34 +6,47 @@
     <canvas id="chart" width="200" height="200"></canvas>
     <script type="text/javascript">
 
-var j = [];
 var s = [];
 var url = window.location.host.toString();
 
-$.ajax({
-    type: 'GET',
-    url: 'http://' + url + "/sensorGraph/s1",
-    dataType: 'json',
-    success: function (data) {
-       j = data;
-    },
-    async: false
- });
+function loadSensors() {
 
- $.ajax({
+     $.ajax({
     type: 'GET',
     url: 'http://' + url + "/sensors",
     dataType: 'json',
     success: function (data) {
        s = data;
     },
-    async: false
- });
+        async: false
+    });
 
- var chartData = {
-     labels: j.labels,
-     datasets: j.datasets
- };
+}
+
+function loadGraphData() {
+
+    var sensor = $("input[name='sensorid']:checked").val();
+    var j = [];
+
+    $.ajax({
+    type: 'GET',
+    url: 'http://' + url + "/sensorGraph/" + sensor,
+    dataType: 'json',
+    success: function (data) {
+       j = data;
+    },
+        async: false
+    });
+
+     var chartData = {
+        labels: j.labels,
+        datasets: j.datasets
+    };
+
+    chart.data=chartData;
+    chart.update();
+
+}
 
  var options = {
     responsive: true,
@@ -48,17 +61,25 @@ $.ajax({
     }
  };
 
- window.onload = function () {
-     var ctx = document.getElementById("chart").getContext("2d");
-     const chart = new Chart(ctx, { type: 'line',data: chartData, options: options });
+
+var ctx = document.getElementById("chart").getContext("2d");
+const chart = new Chart(ctx, { type: 'line', data: {}, options: options });
+
+window.onload = function () {
+    loadSensors();
+
      $.each(s, function (key, value)
     {
-        $("#sensors").append("<input type='radio' name='" + value + "' /> " + value + " <br />");
+        $("#sensors").append(value + " : <input type='radio' name='sensorid' value='" + value + "' onclick='loadGraphData();' /> <br/>");
     });
  }
+
 </script>
 </head>
 <body>
 <div align="center" id="sensors"></div>
+<p align="center">
+    <a href="index.html"> Back </a>
+</p>
 </body>
 </html>

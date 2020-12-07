@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class SensorData {
 
-    private Long id;
+    private Long timeStamp;
     private String sensorName;
     private Double sensorValue;
 
@@ -32,12 +32,12 @@ public class SensorData {
         this.sensorValue = sensorValue;
     }
 
-    public Long getId() {
-        return id;
+    public Long getTimeStamp() {
+        return timeStamp;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setTimeStamp(Long timeStamp) {
+        this.timeStamp = timeStamp;
     }
 
     @Override
@@ -45,20 +45,20 @@ public class SensorData {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SensorData that = (SensorData) o;
-        return Objects.equals(id, that.id) &&
+        return Objects.equals(timeStamp, that.timeStamp) &&
                 Objects.equals(sensorName, that.sensorName) &&
                 Objects.equals(sensorValue, that.sensorValue);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, sensorName, sensorValue);
+        return Objects.hash(timeStamp, sensorName, sensorValue);
     }
 
     @Override
     public String toString() {
         return "SensorData{" +
-                "id=" + id +
+                "id=" + timeStamp +
                 ", sensorName='" + sensorName + '\'' +
                 ", sensorValue=" + sensorValue +
                 '}';

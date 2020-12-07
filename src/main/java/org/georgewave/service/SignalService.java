@@ -3,7 +3,7 @@ package org.georgewave.service;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -14,18 +14,13 @@ import org.georgewave.model.SensorData;
 @Service
 public class SignalService {
 
-    private Map<String, List<SensorData>> data;
+    private Map<String, LinkedList<SensorData>> data;
 
     @PostConstruct
     public void init() {
         data = new ConcurrentHashMap<>();
 
-        addMeasurement( new SensorData("s1", 22.3));
-        addMeasurement( new SensorData("s1", 25.3));
-        addMeasurement( new SensorData("s1", 33.3));
-        addMeasurement( new SensorData("s1", 10.3));
-        addMeasurement( new SensorData("s2", 33.3));
-        addMeasurement( new SensorData("s2", 10.3));
+
 
     }
 
@@ -34,10 +29,10 @@ public class SignalService {
 
         //TODO - validate input data
 
-        sensorData.setId(System.currentTimeMillis()); //
+        sensorData.setTimeStamp(System.currentTimeMillis()); //
 
         data.computeIfAbsent(sensorData.getSensorName(),
-               key ->  new ArrayList<>());
+               key ->  new LinkedList<>());
 
         data.get(sensorData.getSensorName()).add(sensorData);
 
@@ -51,7 +46,21 @@ public class SignalService {
         return data.keySet();
     }
 
+
     public void cleanData(final long offset, String sensorName) {
-        //TODO
+
+        LinkedList<SensorData> dataSet = data.get(sensorName);
+
+        if (dataSet == null || dataSet.isEmpty()) return;
+
+        long currentTimestamp = System.currentTimeMillis();
+        long dataTimeStamp = dataSet.getFirst().getTimeStamp();
+
+        //check if element is older that current time - offset time
+        while(dataTimeStamp < (currentTimestamp - offset)){
+
+            dataSet.removeFirst();
+            dataTimeStamp = dataSet.getFirst().getTimeStamp();
+        }
     }
 }
