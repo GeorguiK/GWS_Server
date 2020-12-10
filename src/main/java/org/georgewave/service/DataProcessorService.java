@@ -1,7 +1,9 @@
 package org.georgewave.service;
 
+import org.georgewave.model.SensorData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.Collection;
 
 @Service
 public class DataProcessorService {
@@ -20,19 +22,33 @@ public class DataProcessorService {
     public void processData() {
 
         for (String sensorName : signalService.getSensorNames()) {
+
+            signalService.cleanData(OFFSET, sensorName);
+
             boolean processingResult = processSensorData(sensorName);
 
             if (processingResult){
                 alertService.sendAlert("Intruder detected by sensor: " + sensorName);
             }
 
-            signalService.cleanData(OFFSET, sensorName);
+
         }
 
     }
 
     public boolean processSensorData(String sensorID){
-        //TODO actually do it
+        long threshold = signalService.getSignalStrengthThreshold();
+        Collection<SensorData> sensorDataList = signalService.getSensorData(sensorID);
+
+        for (SensorData sensorData:
+             sensorDataList) {
+            if (sensorData.getSensorValue() < threshold) return true;
+        }
+        
         return false;
+    }
+
+    public static long getOFFSET() {
+        return OFFSET;
     }
 }

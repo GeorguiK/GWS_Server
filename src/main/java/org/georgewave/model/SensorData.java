@@ -6,14 +6,20 @@ public class SensorData {
 
     private Long timeStamp;
     private String sensorName;
-    private Double sensorValue;
+    private long sensorValue;
 
     public SensorData() {
     }
 
-    public SensorData(String sensorName, Double sensorValue) {
+    public SensorData(String sensorName, long sensorValue) {
         this.sensorName = sensorName;
         this.sensorValue = sensorValue;
+    }
+
+    public SensorData(String sensorName, long sensorValue, Long timeStamp){
+        this.sensorName = sensorName;
+        this.sensorValue = sensorValue;
+        this.timeStamp = timeStamp;
     }
 
     public String getSensorName() {
@@ -24,11 +30,11 @@ public class SensorData {
         this.sensorName = sensorName;
     }
 
-    public Double getSensorValue() {
+    public long getSensorValue() {
         return sensorValue;
     }
 
-    public void setSensorValue(Double sensorValue) {
+    public void setSensorValue(long sensorValue) {
         this.sensorValue = sensorValue;
     }
 

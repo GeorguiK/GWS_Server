@@ -22,6 +22,11 @@ public class AdminController {
         this.securityEventsService = securityEventsService;
     }
 
+    @RequestMapping(value = "/getAlarmStatus", method = RequestMethod.GET)
+    public boolean getAlarmStatus() {
+        return alertService.getAlarmStatus(null); //TODO
+    }
+
     @RequestMapping(value = "/disable", method = RequestMethod.POST)
     public void disable() {
         alertService.disableAlarm(null); //TODO

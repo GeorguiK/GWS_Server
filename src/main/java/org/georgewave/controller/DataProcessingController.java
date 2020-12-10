@@ -28,21 +28,38 @@ public class DataProcessingController {
 
     @RequestMapping(value = "/populateAndProcessSensorData/{sensorName}", method = RequestMethod.GET)
     public boolean populateAndProcessSensorData(@PathVariable String sensorName) {
+        boolean result = true;
+        long currentTime = System.currentTimeMillis();
         try{
-            signalService.addMeasurement( new SensorData(sensorName, 22.3));
-            TimeUnit.SECONDS.sleep(1);
-            signalService.addMeasurement( new SensorData(sensorName, 25.3));
-            TimeUnit.SECONDS.sleep(1);
-            signalService.addMeasurement( new SensorData(sensorName, 33.3));
-            TimeUnit.SECONDS.sleep(1);
-            signalService.addMeasurement( new SensorData(sensorName, 10.3));
-            TimeUnit.SECONDS.sleep(1);
-            signalService.addMeasurement( new SensorData(sensorName, 33.3));
-            TimeUnit.SECONDS.sleep(1);
-            signalService.addMeasurement( new SensorData(sensorName, 10.3));
+
+            //populate S1
+            String sensorOne = "S1";
+            for(long i = 100; i >= 0; i--){
+                signalService.addMeasurement(sensorOne,
+                        100 - (int)(Math.random() * 25),
+                        currentTime - (i*1000));
+            }
+
+            //populate S2
+            String sensorTwo = "S2";
+            for(long i = 100; i >= 0; i--){
+                signalService.addMeasurement(sensorTwo,
+                        100 - (int)(Math.random() * 100),
+                        currentTime - (i*1000));
+            }
+
+
+            //S1 - no event triggered
+            if (dataProcessorService.processSensorData("S1")) result = false;
+
+            //S2 - event triggered
+            if (!dataProcessorService.processSensorData("S2")) result = false;
+
+
+
         }catch(Exception e){
             System.out.print(e.getMessage());
         }
-        return dataProcessorService.processSensorData(sensorName);
+        return result;
     }
 }

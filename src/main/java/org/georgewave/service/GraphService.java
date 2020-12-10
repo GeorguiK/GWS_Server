@@ -76,7 +76,7 @@ public class GraphService {
         graphDataSet.setPointHighlightFill("#fff");
         graphDataSet.setPointHighlightStroke("rgba(220,220,220,1)");
 
-        List<Double> data = new ArrayList<>();
+        List<Long> data = new ArrayList<>();
 
         sensorDataCollection.stream().forEach(e -> data.add(e.getSensorValue()) );
 

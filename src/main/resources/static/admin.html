@@ -2,11 +2,106 @@
 <html>
 <head>
     <script src="script/jquery-3.5.1.min.js"></script>
+    <script type="text/javascript">
+
+    var url = window.location.host.toString();
+    var securityUrl = "http://" + url + "/securitylog";
+
+    function disableAlarm() {
+
+     $.post('http://' + url + "/disable", {},
+        function(data, status){
+             $('#alarmState').text("false");
+     });
+
+    }
+
+   function enableAlarm() {
+
+    $.post('http://' + url + "/enable", {},
+        function(data, status){
+             $('#alarmState').text("true");
+     });
+    }
+
+    function getAlarmStatus() {
+
+     $.ajax({
+        type: 'GET',
+        url: 'http://' + url + "/getAlarmStatus",
+        dataType: 'json',
+     success: function (data) {
+        $('#alarmState').text(data);
+        },
+            async: false
+        });
+
+    }
+
+    function readSecurityEvents() {
+
+        $.ajax({
+        url: securityUrl,
+        type: 'get',
+        dataType: 'JSON',
+        success: function(response){
+
+            $("#securityEvents tbody").empty();
+
+            var len = response.length;
+            for(var i=0; i<len; i++){
+
+                var timestamp = response[i].time;
+                var date = new Date(timestamp);
+                var eventType = response[i].eventType;
+                var eventMessage = response[i].eventMessage;
+
+                var tr_str = "<tr>" +
+                    "<td align='center'>" + date + "</td>" +
+                    "<td align='center'>" + eventType + "</td>" +
+                    "<td align='center'>" + eventMessage + "</td>" +
+                    "</tr>";
+
+                $("#securityEvents tbody").append(tr_str);
+            }
+
+        }
+    });
+
+    }
+
+window.onload = function () {
+     getAlarmStatus();
+     readSecurityEvents();
+}
+</script>
 </head>
 <body>
 
 <h1 align="center">Admin Page</h1>
-
+<h2 align="center">
+    Alarm State : <div id="alarmState"></div>
+</h2>
+<p align="center">
+    <input type="button"
+           value="Disable" onclick="disableAlarm();">
+    &nbsp;
+    <input type="button"
+           value="Refresh Log" onclick="readSecurityEvents();">
+    &nbsp;
+    <input type="button"
+           value="Enable" onclick="enableAlarm();">
+</p>
+<p align="center">
+<hr/>
+    <table id="securityEvents" style="width:100%">
+         <tr>
+            <th>Time</th>
+            <th>Type</th>
+             <th>Message</th>
+        </tr>
+    </table>
+</p>
 <p align="center">
     <a href="index.html"> Back </a>
 </p>

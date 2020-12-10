@@ -13,7 +13,7 @@ public class GraphDataSet {
     private String pointStrokeColor;
     private String pointHighlightFill;
     private String pointHighlightStroke;
-    private List<Double> data = new ArrayList<>();
+    private List<Long> data = new ArrayList<>();
 
     public GraphDataSet() {
     }
@@ -74,11 +74,11 @@ public class GraphDataSet {
         this.pointHighlightStroke = pointHighlightStroke;
     }
 
-    public List<Double> getData() {
+    public List<Long> getData() {
         return data;
     }
 
-    public void setData(List<Double> data) {
+    public void setData(List<Long> data) {
         this.data = data;
     }
 

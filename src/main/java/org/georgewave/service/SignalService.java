@@ -16,11 +16,16 @@ public class SignalService {
 
     private Map<String, LinkedList<SensorData>> data;
 
+    //TODO make a seperate wrapper class for each sensor to use
+    private long signalStrengthThreshold = 70;
+
+    public long getSignalStrengthThreshold() {
+        return signalStrengthThreshold;
+    }
+
     @PostConstruct
     public void init() {
         data = new ConcurrentHashMap<>();
-
-
 
     }
 
@@ -33,6 +38,17 @@ public class SignalService {
 
         data.computeIfAbsent(sensorData.getSensorName(),
                key ->  new LinkedList<>());
+
+        data.get(sensorData.getSensorName()).add(sensorData);
+
+    }
+
+    public void addMeasurement(String sensorName, long sensorValue, Long manualTimeStamp) {
+
+        SensorData sensorData = new SensorData(sensorName, sensorValue, manualTimeStamp);
+
+        data.computeIfAbsent(sensorData.getSensorName(),
+                key ->  new LinkedList<>());
 
         data.get(sensorData.getSensorName()).add(sensorData);
 

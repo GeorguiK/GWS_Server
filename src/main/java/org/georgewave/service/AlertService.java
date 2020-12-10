@@ -41,6 +41,13 @@ public class AlertService {
 
     }
 
+    public boolean getAlarmStatus(String IP) {
+        long time = System.currentTimeMillis();
+        SecurityEvent event = new SecurityEvent(time, "admin", "Alarm status was requested", IP);
+        securityEventsService.add(event);
+        return enabled;
+    }
+
     public void enableAlarm(String IP) {
 
         long time = System.currentTimeMillis();
