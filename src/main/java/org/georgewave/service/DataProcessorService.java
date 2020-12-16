@@ -10,7 +10,7 @@ public class DataProcessorService {
 
     private final SignalService signalService;
     private final AlertService alertService;
-    private static final long OFFSET = 60*1000;//Window offset is 60 seconds
+    public static final long OFFSET = 60*1000;//Window offset is 60 seconds
 
     @Autowired
     public DataProcessorService(SignalService signalService, AlertService alertService) {
@@ -23,7 +23,7 @@ public class DataProcessorService {
 
         for (String sensorName : signalService.getSensorNames()) {
 
-            signalService.cleanData(OFFSET, sensorName);
+            signalService.getSensor(sensorName).cleanData(OFFSET);
 
             boolean processingResult = processSensorData(sensorName);
 
@@ -31,14 +31,13 @@ public class DataProcessorService {
                 alertService.sendAlert("Intruder detected by sensor: " + sensorName);
             }
 
-
         }
 
     }
 
-    public boolean processSensorData(String sensorID){
-        long threshold = signalService.getSignalStrengthThreshold();
-        Collection<SensorData> sensorDataList = signalService.getSensorData(sensorID);
+    public boolean processSensorData(String sensorName){
+        long threshold = signalService.getSensor(sensorName).getSignalStrengthThreshold();
+        Collection<SensorData> sensorDataList = signalService.getSensorData(sensorName);
 
         for (SensorData sensorData:
              sensorDataList) {
@@ -46,9 +45,5 @@ public class DataProcessorService {
         }
         
         return false;
-    }
-
-    public static long getOFFSET() {
-        return OFFSET;
     }
 }

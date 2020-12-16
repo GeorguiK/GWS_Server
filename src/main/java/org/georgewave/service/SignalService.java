@@ -1,5 +1,6 @@
 package org.georgewave.service;
 
+import org.georgewave.model.Sensor;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -14,19 +15,11 @@ import org.georgewave.model.SensorData;
 @Service
 public class SignalService {
 
-    private Map<String, LinkedList<SensorData>> data;
-
-    //TODO make a seperate wrapper class for each sensor to use
-    private long signalStrengthThreshold = 70;
-
-    public long getSignalStrengthThreshold() {
-        return signalStrengthThreshold;
-    }
+    private Map<String, Sensor> data;
 
     @PostConstruct
     public void init() {
         data = new ConcurrentHashMap<>();
-
     }
 
 
@@ -37,25 +30,18 @@ public class SignalService {
         sensorData.setTimeStamp(System.currentTimeMillis()); //
 
         data.computeIfAbsent(sensorData.getSensorName(),
-               key ->  new LinkedList<>());
+               key ->  new Sensor(sensorData.getSensorName()));
 
-        data.get(sensorData.getSensorName()).add(sensorData);
+        data.get(sensorData.getSensorName()).addMeasurement(sensorData);
 
     }
 
-    public void addMeasurement(String sensorName, long sensorValue, Long manualTimeStamp) {
-
-        SensorData sensorData = new SensorData(sensorName, sensorValue, manualTimeStamp);
-
-        data.computeIfAbsent(sensorData.getSensorName(),
-                key ->  new LinkedList<>());
-
-        data.get(sensorData.getSensorName()).add(sensorData);
-
+    public Sensor getSensor(String sensorName){
+        return data.get(sensorName);
     }
 
     public Collection<SensorData> getSensorData(String sensorName) {
-        return data.get(sensorName);
+        return data.get(sensorName).getSensorDataList();
     }
 
     public Collection<String> getSensorNames() {
@@ -63,20 +49,5 @@ public class SignalService {
     }
 
 
-    public void cleanData(final long offset, String sensorName) {
 
-        LinkedList<SensorData> dataSet = data.get(sensorName);
-
-        if (dataSet == null || dataSet.isEmpty()) return;
-
-        long currentTimestamp = System.currentTimeMillis();
-        long dataTimeStamp = dataSet.getFirst().getTimeStamp();
-
-        //check if element is older that current time - offset time
-        while(dataTimeStamp < (currentTimestamp - offset)){
-
-            dataSet.removeFirst();
-            dataTimeStamp = dataSet.getFirst().getTimeStamp();
-        }
-    }
 }
