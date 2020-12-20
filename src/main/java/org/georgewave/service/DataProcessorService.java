@@ -3,6 +3,7 @@ package org.georgewave.service;
 import org.georgewave.model.SensorData;
 import org.georgewave.util.Algorithm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import java.util.Collection;
 
@@ -20,6 +21,7 @@ public class DataProcessorService {
     }
 
     //TODO add Spring scheduling (every 5 seconds)
+    @Scheduled(fixedDelay = 60000, fixedRate = 10000)
     public void processData() {
 
         for (String sensorName : signalService.getSensorNames()) {
