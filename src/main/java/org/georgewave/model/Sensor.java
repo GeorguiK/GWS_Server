@@ -5,8 +5,10 @@ import java.util.LinkedList;
 public class Sensor {
 
     private String sensorName;
-    private LinkedList<SensorData> sensorDataList = new LinkedList<>();
+    private final LinkedList<SensorData> sensorDataList = new LinkedList<>();
     private long signalStrengthThreshold;
+
+    public static final long DEFAULT_THRESHOLD = 10;
 
     public Sensor() {
     }
@@ -18,7 +20,7 @@ public class Sensor {
     //cleanData method ensures that linked list of sensorData does not exceed the offset (in milliseconds) time.
     public void cleanData(final long offset) {
 
-        if (sensorDataList == null || sensorDataList.isEmpty()) return;
+        if (sensorDataList.isEmpty()) return;
 
         long currentTimestamp = System.currentTimeMillis();
         long dataTimeStamp = sensorDataList.getFirst().getTimeStamp();
@@ -33,7 +35,7 @@ public class Sensor {
 
     public void calculateSensorSignalThreshold(){
         //TODO: Write algorithm that calculates an accurate signal threshold
-         signalStrengthThreshold = 70;
+         signalStrengthThreshold = DEFAULT_THRESHOLD;
     }
 
     public void addMeasurement(SensorData sensorData){
