@@ -28,6 +28,7 @@ public class AlertService {
 
     public void sendAlert(String alertString) {
 
+        //TODO do not spam alerts
         if (enabled) {
             long time = System.currentTimeMillis();
             SecurityEvent event = new SecurityEvent(time, "alarm", alertString, null);
@@ -40,7 +41,6 @@ public class AlertService {
         }
 
     }
-
 
     public boolean getAlarmStatus(String IP) {
         //long time = System.currentTimeMillis();

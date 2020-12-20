@@ -20,8 +20,7 @@ public class DataProcessorService {
         this.alertService = alertService;
     }
 
-    //TODO add Spring scheduling (every 5 seconds)
-    @Scheduled(fixedDelay = 60000, fixedRate = 10000)
+    @Scheduled(fixedRate = 30000)
     public void processData() {
 
         for (String sensorName : signalService.getSensorNames()) {
