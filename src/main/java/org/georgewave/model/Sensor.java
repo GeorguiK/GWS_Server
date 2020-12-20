@@ -15,6 +15,7 @@ public class Sensor {
 
     public Sensor(String sensorName) {
         this.sensorName = sensorName;
+        calculateSensorSignalThreshold();
     }
 
     //cleanData method ensures that linked list of sensorData does not exceed the offset (in milliseconds) time.
