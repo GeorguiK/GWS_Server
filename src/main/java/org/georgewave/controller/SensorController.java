@@ -18,8 +18,8 @@ public class SensorController {
 	}
 
 	@RequestMapping(value = "/addData/{sensorName}/{SensorValue}", method = RequestMethod.GET)
-	public void addSensorData(@PathVariable String sensorName, @PathVariable long sensorValue){
-		SensorData sensorData = new SensorData(sensorName, sensorValue);
+	public void addSensorData(@PathVariable String sensorName, @PathVariable String sensorValue){
+		SensorData sensorData = new SensorData(sensorName, Long.parseLong(sensorValue));
 		signalService.addMeasurement(sensorData);
 	}
 
