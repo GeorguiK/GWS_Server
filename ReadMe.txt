@@ -5,3 +5,5 @@ When something moves inbetween the wifi card and the router the signal strength 
 The server logs that event and sends an alert event. 
 
 In the future This service would send a notification via text message, app, or email.
+
+Requires:https://github.com/GeorguiK/Arduino_Wi-fi_Sensor
